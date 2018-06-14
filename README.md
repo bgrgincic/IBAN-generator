@@ -1,2 +1,2 @@
 # IBAN-generator
-Mass IBAN account generator
+Mass random IBAN citizen account generator for Croatian banks.
