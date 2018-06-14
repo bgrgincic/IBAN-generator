@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Iban mass generator</title>
+
+
+</head>
+<body class="page_bg" bgcolor="#f7f7f7">
+
+					<h1>IBAN mass generator</h1>
+				
+					<div class="corner"
+						style="position: absolute; right: 260px; top: 15px;"></div>
+
+					<p>
+						The <strong>International Bank Account Number</strong> (IBAN)
+					</p>
+					
+<select name="vbdi" id="vbdi" onchange="generateIBAN()" >
+						<option selected="selected" value="0">Odaberite banku</option>
+						<option value="2402006">2402006 - ERSTE &amp; STEIERMARKISCHE BANK</option>
+						<option value="1001005">1001005 - HRVATSKA NARODNA BANKA</option>
+						<option value="2330003">2330003 - SOCIETE GENERALE-SPLITSKA BANKA D.D.</option>
+						<option value="2340009">2340009 - PRIVREDNA BANKA D.D. ZAGREB</option>
+						<option value="2360000">2360000 - ZAGREBAČKA BANKA D.D. ZAGREB</option>
+						<option value="2380006">2380006 - ISTARSKA KREDITNA BANKA D.D.</option>
+						<option value="2381009">2381009 - VENETO BANKA D.D. ZAGREB</option>
+						<option value="2386002">2386002 - PODRAVSKA BANKA D.D.KOPRIVNICA</option>
+						<option value="2390001">2390001 - HRVATSKA POŠTANSKA BANKA D.D.</option>
+						<option value="2400008">2400008 - KARLOVAČKA BANKA D.D. KARLOVAC</option>
+						<option value="2403009">2403009 - SAMOBORSKA BANKA D.D. SAMOBOR</option>
+						<option value="2407000">2407000 - OTP BANKA HRVATSKA D.D.ZADAR</option>
+						<option value="2408002">2408002 - PARTNER BANKA D.D.</option>
+						<option value="2411006">2411006 - JADRANSKA BANKA D.D.ŠIBENIK</option>
+						<option value="2412009">2412009 - SLATINSKA BANKA DD SLATINA</option>
+						<option value="2481000">2481000 - KREDITNA BANKA ZAGREB  DD</option>
+						<option value="2483005">2483005 - ŠTEDBANKA D.D.</option>
+						<option value="2484008">2484008 - RAIFFEISENBANK AUSTRIA D.D.</option>
+						<option value="2485003">2485003 - CROATIA BANKA D.D.</option>
+						<option value="2488001">2488001 - BKS BANK D.D.</option>
+						<option value="2489004">2489004 - VABA D.D. VARAŽDIN</option>
+						<option value="2492008">2492008 - IMEX BANKA D D SPLIT</option>
+						<option value="2493003">2493003 - HRVATSKA BANKA ZA OBNOVU I RAZVITAK</option>
+						<option value="2495009">2495009 - NAVA BANKA d.d.</option>
+						<option value="2500009">2500009 - HYPO ALPE-ADRIA-BANK D.D.</option>
+						<option value="2503007">2503007 - SBERBANK D.D.</option>
+						<option value="4109006">4109006 - BANKA SPLITSKO DALMATINSKA D.D. SPLIT</option>
+						<option value="4115008">4115008 - BANCO POPOLARE CROATIA D.D.</option>
+						<option value="4124003">4124003 - KENTBANK D.D.</option>
+						<option value="4132003">4132003 - PRIMORSKA BANKA D.D. RIJEKA</option>
+						<option value="4133006">4133006 - BANKA KOVANICA D.D.</option>
+						<option value="6717002">6717002 - TESLA ŠTEDNA BANKA D.D.</option>
+					</select><img onclick="javascript:generateIBAN();" src="img/refresh.png" />
+<br />
+
+<br />
+
+
+<div id="ibani">Odaberite banku!</div>
+
+
+</body>
+</html>
+
+
+	
+<script language="JavaScript">
+
+
+
+
+function generateIBAN() {
+
+
+
+	var brojac=0;
+	var odabranVBDI = getSelectedVbdi();
+	
+	if (odabranVBDI == 0) return document.getElementById("ibani").innerHTML="Odaberite banku!"; 
+	
+	var kolekcijaIbana = "";
+	
+while(brojac < 100) {
+	var partijaRacuna = getRandomInt(100000000, 999999999);
+	var tostringpartija = partijaRacuna.toString();
+	var substringpartije = tostringpartija.substring(0, 2);
+	if (substringpartije.substring(0, 2) == "32") {
+	 kolekcijaIbana = kolekcijaIbana + ibanR(odabranVBDI, dodajKontrolZnam(partijaRacuna.toString()))  + '<br/>';
+
+		brojac++;
+		document.getElementById("ibani").innerHTML=kolekcijaIbana;
+	}
+	
+
+}
+
+}
+
+function getSelectedVbdi() {
+		var e = document.getElementById("vbdi");
+		var strUser = e.options[e.selectedIndex].value;
+	return strUser;
+		
+	  }
+	
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function dodajKontrolZnam(digits) {
+	return digits + computeCheck(digits);
+}
+
+function verify(digits) {
+
+	var t = 10;
+	for (var i = 0; i < digits.length - 1; i++) {
+		t = 2 * f(t + digits.charAt(i) - 48) % 11;
+	}
+	return (t + getCheckDigit(digits)) % 10 == 1;
+
+	return false;
+}
+
+function f(x) {
+	var val = x % 10;
+	return val == 0 ? 10 : val;
+}
+
+	function computeCheck(digits) {
+	var povratnaPoruka;
+	var t = 10;
+	for (var i = 0; i < digits.length; i++) {
+		var c = digits.charAt(i) - '0';
+		if ((c < 0) || (c > 9)) {
+			povratnaPoruka = "Neispravan broj: '" + digits.charAt(i) + "'";
+		}
+		t = 2 * f(t + c) % 11;
+	}
+	return (11 - t) % 10;
+}
+
+
+function getCheckDigit(digits) {
+	return digits.charAt(digits.length - 1) - '0';
+}
+
+
+function modulo( aNumStr, aDiv)
+{
+	var tmp = "";
+	var  i, r;
+	for ( i=0; i<aNumStr.length ; i++)
+	{
+		tmp += aNumStr.charAt( i);
+		r = tmp % aDiv;
+		tmp = r.toString( 10);
+	}
+	return tmp / 1;
+}
+
+function ibanR(banka1,racun1)
+ // Calculate checksum
+{
+var x;
+var y;
+
+x = banka1 + racun1 + '172700' ;
+  y = 98 - modulo(x,97);
+if (y < 10 ) {y ='0'+y ; } 
+  
+  iban3 = 'HR' +  y +  banka1 +  racun1;
+  return iban3;
+ }
+  
+  
+
+
+</script>
